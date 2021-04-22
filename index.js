@@ -1,6 +1,6 @@
-import {currencyByDate} from './fixtures';
+import { currencyByDate } from './fixtures';
 
-import {EUR, formatDateForRequest, PLN, USD,} from './utils';
+import { EUR, formatDateForRequest, PLN, USD } from './utils';
 
 if (module.hot) {
   module.hot.accept();
@@ -26,7 +26,6 @@ function renderApp() {
     `;
 }
 
-
 function app() {
   return `<div class="container py-5" class="p-5 mb-4 bg-light rounded-3">
   ${exchangeRateToday()}
@@ -38,33 +37,27 @@ function app() {
 </div>`;
 }
 
-
 function exchangeRateToday() {
-  const {currentCurrency, currentDate} = window.dataStore;
+  const { currentCurrency, currentDate } = window.dataStore;
 
   const ratesForToday = currencyByDate[formatDateForRequest(currentDate)];
-  const exchangeRateToday = (
-    ratesForToday ? ratesForToday[currentCurrency][0]["rate"] : null
-  );
+  const exchangeRateToday = ratesForToday ? ratesForToday[currentCurrency][0]['rate'] : null;
 
   const yesterday = new Date(currentDate);
   yesterday.setDate(yesterday.getDate() - 1);
 
   const ratesForYesterday = currencyByDate[formatDateForRequest(yesterday)];
-  const exchangeRateYesterday = (
-    ratesForYesterday ? ratesForYesterday[currentCurrency][0]["rate"] : null
-  );
+  const exchangeRateYesterday = ratesForYesterday
+    ? ratesForYesterday[currentCurrency][0]['rate']
+    : null;
 
-  const rateDifference = (
+  const rateDifference =
     exchangeRateToday && exchangeRateYesterday
-      ? (exchangeRateToday - exchangeRateYesterday).toFixed(2) : null
-  );
+      ? (exchangeRateToday - exchangeRateYesterday).toFixed(2)
+      : null;
 
-  return displayExchangeRateToday(
-    currentCurrency, exchangeRateToday, currentDate, rateDifference
-  );
+  return displayExchangeRateToday(currentCurrency, exchangeRateToday, currentDate, rateDifference);
 }
-
 
 function displayExchangeRateToday(currency, exchangeRate, date, rateDifference) {
   exchangeRate = exchangeRate || 'Not Available';
@@ -75,9 +68,7 @@ function displayExchangeRateToday(currency, exchangeRate, date, rateDifference) 
   if (rateDifference) {
     const differenceStyle = rateDifference > 0 ? 'success' : 'danger';
     const sign = rateDifference > 0 ? '+' : '';
-    rateDifferenceStr = (
-      `<span class="text-${differenceStyle} fs-3">${sign}${rateDifference}</span>`
-    );
+    rateDifferenceStr = `<span class="text-${differenceStyle} fs-3">${sign}${rateDifference}</span>`;
   }
 
   return `
@@ -89,30 +80,26 @@ function displayExchangeRateToday(currency, exchangeRate, date, rateDifference) 
     <p class="text-secondary">
       Rate for ${dateString}
   </p> 
-  `
+  `;
 }
 
-
 function chooseCurrency(currentCurrency, setCurrencyCB) {
-  const currencies = [
-    {value: USD},
-    {value: EUR},
-    {value: PLN},
-  ];
+  const currencies = [{ value: USD }, { value: EUR }, { value: PLN }];
   let content = `
     <label for="id_select">Choose currency:</label>
     <select id="id_select" class="form-select" 
     autofocus="true" onchange="(${setCurrencyCB})(this.value);">
   `;
 
-  content += currencies.map(({value}) => {
-    const selected = currentCurrency === value ? 'selected' : '';
-    return `<option value="${value}" ${selected}>${value}</option>`;
-  }).join('');
+  content += currencies
+    .map(({ value }) => {
+      const selected = currentCurrency === value ? 'selected' : '';
+      return `<option value="${value}" ${selected}>${value}</option>`;
+    })
+    .join('');
   content += `</select>`;
-  return content
+  return content;
 }
-
 
 function chooseDate() {
   const currentDate = window.dataStore.currentDate;
