@@ -10,3 +10,9 @@ export function formatDateForRequest(date) {
 
   return [date.getFullYear(), (mm > 9 ? '' : '0') + mm, (dd > 9 ? '' : '0') + dd].join('');
 }
+
+export function getBankUrl(currency, date) {
+  const dateStr = formatDateForRequest(date);
+
+  return `https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?valcode=${currency}&date=${dateStr}&json`;
+}
